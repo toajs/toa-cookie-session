@@ -21,12 +21,7 @@ npm install toa-cookie-session
 ```js
 var toaCookieSession = require('toa-cookie-session')
 ```
-### var cookieSession = toaCookieSession([options])
-
-
-```
-
-
+### app.use(toaCookieSession([options]))
 
 ## Licences
 (The MIT License)
