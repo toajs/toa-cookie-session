@@ -3,14 +3,16 @@
 //
 // **License:** MIT
 
-module.exports = function toaCookieSession (options) {
+module.exports = toaCookieSession
+
+function toaCookieSession (options) {
   options = options || {}
   options.overwrite = options.overwrite !== false
   options.httpOnly = options.httpOnly !== false
   options.signed = options.signed !== false
   var sessionKey = options.name || 'toa:sess'
 
-  return function cookieSession (callback) {
+  return function cookieSession (done) {
     var session = false
     this.sessionOptions = Object.create(options)
 
@@ -31,13 +33,13 @@ module.exports = function toaCookieSession (options) {
       }
     })
 
-    this.onPreEnd = function (done) {
+    this.onPreEnd = function (cb) {
       if (session !== false) {
         this.cookies.set(sessionKey, session == null ? '' : encode(session), this.sessionOptions)
       }
-      return done()
+      return cb()
     }
-    callback()
+    done()
   }
 }
 
@@ -45,8 +47,9 @@ function Session (obj) {
   Object.defineProperty(this, 'isNew', {value: !obj})
 
   if (obj) {
-    var keys = Object.keys(obj)
-    for (var i = 0; i < keys.length; i++) this[keys[i]] = obj[keys[i]]
+    Object.keys(obj).map(function (key) {
+      this[key] = obj[key]
+    }, this)
   }
 }
 

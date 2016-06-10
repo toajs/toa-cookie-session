@@ -4,6 +4,7 @@ Cookie session middleware for toa.
 
 [![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
+[![Downloads][downloads-image]][downloads-url]
 
 ## [toa](https://github.com/toajs/toa)
 
@@ -19,9 +20,9 @@ npm install toa-cookie-session
 ## API
 
 ```js
-var toaCookieSession = require('toa-cookie-session')
+var cookieSession = require('toa-cookie-session')
 ```
-### app.use(toaCookieSession([options]))
+### app.use(cookieSession([options]))
 
 ## Licences
 (The MIT License)
@@ -31,3 +32,6 @@ var toaCookieSession = require('toa-cookie-session')
 
 [travis-url]: https://travis-ci.org/toajs/toa-cookie-session
 [travis-image]: http://img.shields.io/travis/toajs/toa-cookie-session.svg
+
+[downloads-url]: https://npmjs.org/package/toa-cookie-session
+[downloads-image]: http://img.shields.io/npm/dm/toa-cookie-session.svg?style=flat-square
