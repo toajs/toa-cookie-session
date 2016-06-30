@@ -11,6 +11,7 @@ function toaCookieSession (options) {
   options.httpOnly = options.httpOnly !== false
   options.signed = options.signed !== false
   var sessionKey = options.name || 'toa:sess'
+  var setCookie = options.setCookie !== false
 
   return function cookieSession (done) {
     var session = false
@@ -22,9 +23,9 @@ function toaCookieSession (options) {
       get: function () {
         if (session === false) {
           var val = this.cookies.get(sessionKey, this.sessionOptions)
-          session = val && decode(val)
-          var ctx = session ? new SessionContext(false, val) : new SessionContext(true)
-          session = new Session(ctx, session)
+          val = val && decode(val)
+          session = new Session(new SessionContext(!val), val)
+          if (val) session._ctx.val = session.serialize()
         }
         return session
       },
@@ -39,7 +40,7 @@ function toaCookieSession (options) {
     })
 
     this.onPreEnd = function (cb) {
-      if (session === false) return cb()
+      if (!setCookie || session === false) return cb()
       var sessionString = session === null ? '' : session.serialize()
       if (sessionString === '' || (sessionString && session._ctx.val !== sessionString)) {
         this.cookies.set(sessionKey, sessionString, this.sessionOptions)
