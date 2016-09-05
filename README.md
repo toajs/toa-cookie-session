@@ -14,7 +14,7 @@ Cookie session middleware for toa.
 ## Installation
 
 ```bash
-npm install toa-cookie-session
+npm install toa-cookie-session --save
 ```
 
 ## API

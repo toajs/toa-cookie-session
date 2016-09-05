@@ -10,6 +10,7 @@ function toaCookieSession (options) {
   options.overwrite = options.overwrite !== false
   options.httpOnly = options.httpOnly !== false
   options.signed = options.signed !== false
+
   var sessionKey = options.name || 'toa:sess'
   var setCookie = options.setCookie !== false
 
