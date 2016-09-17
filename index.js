@@ -14,7 +14,7 @@ function toaCookieSession (options) {
   var sessionKey = options.name || 'toa:sess'
   var setCookie = options.setCookie !== false
 
-  return function cookieSession (done) {
+  return function cookieSession () {
     var session = false
     this.sessionOptions = Object.create(options)
 
@@ -40,15 +40,16 @@ function toaCookieSession (options) {
       }
     })
 
-    this.onPreEnd = function (cb) {
-      if (!setCookie || session === false) return cb()
+    function saveCookie () {
+      if (!setCookie || session === false) return
       var sessionString = session === null ? '' : session.serialize()
       if (sessionString === '' || (sessionString && session._ctx.val !== sessionString)) {
         this.cookies.set(sessionKey, sessionString, this.sessionOptions)
       }
-      cb()
     }
-    done()
+
+    if (this.after) this.after(saveCookie) // toa >=v2.1
+    else this.onPreEnd = saveCookie
   }
 }
 
