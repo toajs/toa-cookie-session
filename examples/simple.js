@@ -2,15 +2,15 @@
 // **Github:** https://github.com/toajs/toa-cookie-session
 //
 // **License:** MIT
-var Toa = require('toa')
-var toaCookieSession = require('../index')
+const Toa = require('toa')
+const toaCookieSession = require('../index')
 
-var app = Toa(function () {
+const app = new Toa()
+app.use(toaCookieSession())
+app.use(function () {
   console.log(this.session)
   if (!this.session.id) this.session = {id: 'toa'}
   this.body = this.session
 })
-
-app.use(toaCookieSession())
 
 app.listen(3000)

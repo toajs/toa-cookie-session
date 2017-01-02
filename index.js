@@ -11,11 +11,11 @@ function toaCookieSession (options) {
   options.httpOnly = options.httpOnly !== false
   options.signed = options.signed !== false
 
-  var sessionKey = options.name || 'toa:sess'
-  var setCookie = options.setCookie !== false
+  const sessionKey = options.name || 'toa:sess'
+  const setCookie = options.setCookie !== false
 
   return function cookieSession () {
-    var session = false
+    let session = false
     this.sessionOptions = Object.create(options)
 
     Object.defineProperty(this, 'session', {
@@ -23,7 +23,7 @@ function toaCookieSession (options) {
       configurable: false,
       get: function () {
         if (session === false) {
-          var val = this.cookies.get(sessionKey, this.sessionOptions)
+          let val = this.cookies.get(sessionKey, this.sessionOptions)
           val = val && decode(val)
           session = new Session(new SessionContext(!val), val)
           if (val) session._ctx.val = session.serialize()
@@ -34,7 +34,7 @@ function toaCookieSession (options) {
         if (val == null) session = null
         else if (typeof val === 'object') {
           session = this.session
-          var ctx = session ? session._ctx : new SessionContext(true)
+          let ctx = session ? session._ctx : new SessionContext(true)
           session = new Session(ctx, val)
         } else throw new Error('session can only be set as null or an object.')
       }
@@ -42,7 +42,7 @@ function toaCookieSession (options) {
 
     function saveCookie () {
       if (!setCookie || session === false) return
-      var sessionString = session === null ? '' : session.serialize()
+      let sessionString = session === null ? '' : session.serialize()
       if (sessionString === '' || (sessionString && session._ctx.val !== sessionString)) {
         this.cookies.set(sessionKey, sessionString, this.sessionOptions)
       }
@@ -60,22 +60,20 @@ function SessionContext (isNew, val) {
 
 function Session (ctx, obj) {
   Object.defineProperty(this, '_ctx', {value: ctx})
-
   if (obj) {
-    var keys = Object.keys(obj).sort()
-    for (var i = 0; i < keys.length; i++) {
-      this[keys[i]] = obj[keys[i]]
+    for (let key of Object.keys(obj).sort()) {
+      this[key] = obj[key]
     }
   }
 }
 
 Session.prototype.serialize = function () {
-  var keys = Object.keys(this).sort()
+  let keys = Object.keys(this).sort()
   if (!keys.length) return
 
-  var obj = {}
-  for (var i = 0; i < keys.length; i++) {
-    obj[keys[i]] = this[keys[i]]
+  let obj = {}
+  for (let key of keys) {
+    obj[key] = this[key]
   }
   return encode(obj)
 }

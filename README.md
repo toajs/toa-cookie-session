@@ -20,7 +20,7 @@ npm install toa-cookie-session --save
 ## API
 
 ```js
-var cookieSession = require('toa-cookie-session')
+const cookieSession = require('toa-cookie-session')
 ```
 ### app.use(cookieSession([options]))
 
