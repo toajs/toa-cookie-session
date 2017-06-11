@@ -86,10 +86,11 @@ Object.defineProperty(Session.prototype, 'isNew', {
 
 function decode (string) {
   try {
-    return JSON.parse(new Buffer(string, 'base64').toString('utf8'))
+    return JSON.parse(Buffer.from(string, 'base64').toString('utf8'))
   } catch (e) {}
+  return null
 }
 
 function encode (body) {
-  return new Buffer(JSON.stringify(body)).toString('base64')
+  return Buffer.from(JSON.stringify(body)).toString('base64')
 }

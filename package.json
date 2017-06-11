@@ -4,14 +4,14 @@
   "authors": [
     "Yan Qing <admin@zensh.com>"
   ],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:toajs/toa-cookie-session.git"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">= 4.5.0"
   },
   "homepage": "https://github.com/toajs/toa-cookie-session",
   "keywords": [
@@ -23,10 +23,10 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "standard": "^8.6.0",
-    "supertest": "^2.0.1",
-    "tman": "^1.6.4",
-    "toa": "^2.5.0"
+    "standard": "^10.0.2",
+    "supertest": "^3.0.0",
+    "tman": "^1.6.9",
+    "toa": "^2.6.8"
   },
   "scripts": {
     "test": "standard && tman"
