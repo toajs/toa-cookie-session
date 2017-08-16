@@ -6,6 +6,7 @@ const Toa = require('toa')
 const toaCookieSession = require('../index')
 
 const app = new Toa()
+app.keys = ['test key']
 app.use(toaCookieSession())
 app.use(function () {
   console.log(this.session)

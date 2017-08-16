@@ -296,6 +296,6 @@ tman.suite('toa-cookie-session', function () {
       .expect(200)
     date = new Date(res.headers.date)
     expires = new Date(res.headers['set-cookie'][0].match(/expires=([^;]+)/)[1])
-    assert.ok(expires - date > 5000000)
+    assert.ok(expires - date >= 5000000)
   })
 })

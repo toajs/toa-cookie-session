@@ -23,10 +23,10 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "standard": "^10.0.2",
+    "standard": "^10.0.3",
     "supertest": "^3.0.0",
-    "tman": "^1.6.9",
-    "toa": "^2.6.8"
+    "tman": "^1.7.1",
+    "toa": "^3.0.3"
   },
   "scripts": {
     "test": "standard && tman"
