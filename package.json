@@ -11,7 +11,7 @@
     "url": "git@github.com:toajs/toa-cookie-session.git"
   },
   "engines": {
-    "node": ">= 4.5.0"
+    "node": ">= 8"
   },
   "homepage": "https://github.com/toajs/toa-cookie-session",
   "keywords": [
