@@ -298,4 +298,58 @@ tman.suite('toa-cookie-session', function () {
     expires = new Date(res.headers['set-cookie'][0].match(/expires=([^;]+)/)[1])
     assert.ok(expires - date >= 5000000)
   })
+
+  tman.it('should not send SameSite=None property on incompatible clients', function * () {
+    const app = getApp({secure: true, sameSite: 'none'})
+    app.config.secureCookie = true
+    const userAgents = [
+      'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML%2C like Gecko) Chrome/64.0.3282.140 Safari/537.36',
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3165.0 Safari/537.36',
+      'Mozilla/5.0 (Linux; U; Android 8.1.0; zh-CN; OE106 Build/OPM1.171019.026) AppleWebKit/537.36 (KHTML%2C like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.90 Mobile Safari/537.36 AliApp(DingTalk/4.7.18) com.alibaba.android.rimet/12362010 Channel/1565683214685 language/zh-CN UT4Aplus/0.2.25',
+      'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML%2C like Gecko) Chrome/63.0.3239.132 Safari/537.36 dingtalk-win/1.0.0 nw(0.14.7) DingTalk(4.7.19-Release.16) Mojo/1.0.0 Native AppType(release)',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML%2C like Gecko) Chrome/62.0.3202.94 Safari/537.36',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML%2C like Gecko) Chrome/52.0.2723.2 Safari/537.36'
+    ]
+    app.use(function () {
+      this.session.message = 'hello!'
+      this.body = 'toa'
+    })
+    const server = app.listen()
+    for (const userAgent of userAgents) {
+      let res = yield request(server)
+      .get('/')
+      .expect(200)
+      .set('user-agent', userAgent)
+      assert.ok(res.headers['set-cookie'][0].includes('path=/; secure; httponly'))
+    }
+  })
+  tman.it('should send not SameSite=None property on Chrome >= 80', function * () {
+    const app = getApp({secure: true, sameSite: 'none'})
+    app.config.secureCookie = true
+    const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3945.29 Safari/537.36'
+    app.use(function () {
+      this.session.message = 'hello!'
+      this.body = 'toa'
+    })
+    const server = app.listen()
+    let res = yield request(server)
+    .get('/')
+    .set('user-agent', userAgent)
+    .expect(200)
+    assert.ok(res.headers['set-cookie'][0].includes('path=/; samesite=none; secure; httponly'))
+  })
+  tman.it('should not send SameSite=none property on non-secure context', function * () {
+    const app = getApp({sameSite: 'none'})
+    const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3945.29 Safari/537.36'
+    app.use(function () {
+      this.session.message = 'hello!'
+      this.body = 'toa'
+    })
+    const server = app.listen()
+    let res = yield request(server)
+    .get('/')
+    .set('user-agent', userAgent)
+    .expect(200)
+    assert.ok(res.headers['set-cookie'][0].includes('path=/; httponly'))
+  })
 })

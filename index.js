@@ -3,6 +3,8 @@
 //
 // **License:** MIT
 
+const _isSameSiteNoneCompatible = require('should-send-same-site-none').isSameSiteNoneCompatible
+
 module.exports = toaCookieSession
 
 function toaCookieSession (options) {
@@ -16,6 +18,14 @@ function toaCookieSession (options) {
 
   return function cookieSession () {
     let session = false
+    if (options.sameSite && typeof options.sameSite === 'string' && options.sameSite.toLowerCase() === 'none') {
+      const userAgent = this.get('user-agent')
+      // Non-secure context or Incompatible clients, don't send SameSite=None property
+      if (!options.secure || (userAgent && !isSameSiteNoneCompatible(userAgent))) {
+        options.sameSite = false
+      }
+    }
+
     this.sessionOptions = Object.create(options)
 
     Object.defineProperty(this, 'session', {
@@ -93,4 +103,16 @@ function decode (string) {
 
 function encode (body) {
   return Buffer.from(JSON.stringify(body)).toString('base64')
+}
+
+function isSameSiteNoneCompatible (userAgent) {
+  // Chrome >= 80.0.0.0
+  const result = parseChromiumAndMajorVersion(userAgent)
+  if (result.chromium) return result.majorVersion >= 80
+  return _isSameSiteNoneCompatible(userAgent)
+}
+function parseChromiumAndMajorVersion (userAgent) {
+  const m = /Chrom[^ \\/]+\/(\d+)[\\.\d]* /.exec(userAgent)
+  if (!m) return { chromium: false, version: null }
+  return { chromium: true, majorVersion: parseInt(m[1]) }
 }
