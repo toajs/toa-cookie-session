@@ -24,9 +24,9 @@
   "dependencies": {},
   "devDependencies": {
     "should-send-same-site-none": "^2.0.4",
-    "standard": "^10.0.3",
-    "supertest": "^3.0.0",
-    "tman": "^1.7.1",
+    "standard": "^14.3.3",
+    "supertest": "^4.0.2",
+    "tman": "^1.10.0",
     "toa": "^3.3.0"
   },
   "scripts": {

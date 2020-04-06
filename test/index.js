@@ -36,7 +36,7 @@ function shouldNotSetCookies () {
 
 tman.suite('toa-cookie-session', function () {
   tman.it('with options.name', function () {
-    const app = getApp({name: 'hi.session'})
+    const app = getApp({ name: 'hi.session' })
     app.use(function () {
       this.session.message = 'hi'
       this.body = 'toa'
@@ -62,7 +62,7 @@ tman.suite('toa-cookie-session', function () {
   })
 
   tman.it('when options.signed = false', function () {
-    const app = getApp({name: 'hi.session', signed: false})
+    const app = getApp({ name: 'hi.session', signed: false })
     app.use(function () {
       this.session.message = 'hi'
       this.body = 'toa'
@@ -76,7 +76,7 @@ tman.suite('toa-cookie-session', function () {
   })
 
   tman.it('when options.secure = true and app is not secured', function () {
-    const app = getApp({secure: true})
+    const app = getApp({ secure: true })
     app.use(function () {
       this.session.message = 'hi'
       this.body = 'toa'
@@ -89,7 +89,7 @@ tman.suite('toa-cookie-session', function () {
   })
 
   tman.it('when the session contains a ";"', function * () {
-    const app = getApp({name: 'hi.session'})
+    const app = getApp({ name: 'hi.session' })
     app.use(function () {
       if (this.method === 'POST') {
         this.session.string = ';'
@@ -100,12 +100,12 @@ tman.suite('toa-cookie-session', function () {
     })
 
     const server = app.listen()
-    let res = yield request(server)
+    const res = yield request(server)
       .post('/')
       .expect(FindCookie('hi.session'))
       .expect(204)
 
-    let cookie = res.headers['set-cookie']
+    const cookie = res.headers['set-cookie']
     yield request(server)
       .get('/')
       .set('Cookie', cookie.join(';'))
@@ -113,7 +113,7 @@ tman.suite('toa-cookie-session', function () {
   })
 
   tman.it('when the session is invalid', function () {
-    const app = getApp({name: 'hi.session', signed: false})
+    const app = getApp({ name: 'hi.session', signed: false })
     app.use(function () {
       assert.strictEqual(this.session.isNew, true)
       this.body = ''
@@ -161,7 +161,7 @@ tman.suite('toa-cookie-session', function () {
         this.body = 'toa'
       })
 
-      let res = yield request(app.listen())
+      const res = yield request(app.listen())
         .get('/')
         .expect(FindCookie('toa:sess.sig'))
         .expect(200)
@@ -190,7 +190,7 @@ tman.suite('toa-cookie-session', function () {
         this.body = 'toa'
       })
 
-      let res = yield request(app.listen())
+      const res = yield request(app.listen())
         .get('/')
         .set('Cookie', cookie)
         .expect(FindCookie('toa:sess'))
@@ -202,11 +202,11 @@ tman.suite('toa-cookie-session', function () {
       const app = getApp()
       app.use(function () {
         assert.strictEqual(this.session.message, 'Hello')
-        this.session = {name: 'toa'}
+        this.session = { name: 'toa' }
         this.body = 'toa'
       })
 
-      let res = yield request(app.listen())
+      const res = yield request(app.listen())
         .get('/')
         .set('Cookie', cookie)
         .expect(FindCookie('toa:sess'))
@@ -233,7 +233,7 @@ tman.suite('toa-cookie-session', function () {
     tman.it('should not Set-Cookie when set {}', function () {
       const app = getApp()
       app.use(function () {
-        assert.deepEqual(this.session, {})
+        assert.strictEqual(Object.keys(this.session).length, 0)
         this.session = {}
         this.body = 'toa'
       })
@@ -247,8 +247,8 @@ tman.suite('toa-cookie-session', function () {
     tman.it('should create a session when set {name: toa}', function () {
       const app = getApp()
       app.use(function () {
-        assert.deepEqual(this.session, {})
-        this.session = {name: 'toa'}
+        assert.strictEqual(Object.keys(this.session).length, 0)
+        this.session = { name: 'toa' }
         this.body = 'toa'
       })
 
@@ -273,7 +273,7 @@ tman.suite('toa-cookie-session', function () {
   })
 
   tman.it('should alter the cookie setting', function * () {
-    const app = getApp({maxAge: 3600000, name: 'my.session'})
+    const app = getApp({ maxAge: 3600000, name: 'my.session' })
     app.use(function () {
       if (this.url === '/max') {
         this.sessionOptions.maxAge = 6500000
@@ -300,7 +300,7 @@ tman.suite('toa-cookie-session', function () {
   })
 
   tman.it('should not send SameSite=None property on incompatible clients', function * () {
-    const app = getApp({secure: true, sameSite: 'none'})
+    const app = getApp({ secure: true, sameSite: 'none' })
     app.config.secureCookie = true
     const userAgents = [
       'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML%2C like Gecko) Chrome/64.0.3282.140 Safari/537.36',
@@ -316,15 +316,15 @@ tman.suite('toa-cookie-session', function () {
     })
     const server = app.listen()
     for (const userAgent of userAgents) {
-      let res = yield request(server)
-      .get('/')
-      .expect(200)
-      .set('user-agent', userAgent)
+      const res = yield request(server)
+        .get('/')
+        .expect(200)
+        .set('user-agent', userAgent)
       assert.ok(res.headers['set-cookie'][0].includes('path=/; secure; httponly'))
     }
   })
   tman.it('should send not SameSite=None property on Chrome >= 80', function * () {
-    const app = getApp({secure: true, sameSite: 'none'})
+    const app = getApp({ secure: true, sameSite: 'none' })
     app.config.secureCookie = true
     const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3945.29 Safari/537.36'
     app.use(function () {
@@ -332,24 +332,24 @@ tman.suite('toa-cookie-session', function () {
       this.body = 'toa'
     })
     const server = app.listen()
-    let res = yield request(server)
-    .get('/')
-    .set('user-agent', userAgent)
-    .expect(200)
+    const res = yield request(server)
+      .get('/')
+      .set('user-agent', userAgent)
+      .expect(200)
     assert.ok(res.headers['set-cookie'][0].includes('path=/; samesite=none; secure; httponly'))
   })
   tman.it('should not send SameSite=none property on non-secure context', function * () {
-    const app = getApp({sameSite: 'none'})
+    const app = getApp({ sameSite: 'none' })
     const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3945.29 Safari/537.36'
     app.use(function () {
       this.session.message = 'hello!'
       this.body = 'toa'
     })
     const server = app.listen()
-    let res = yield request(server)
-    .get('/')
-    .set('user-agent', userAgent)
-    .expect(200)
+    const res = yield request(server)
+      .get('/')
+      .set('user-agent', userAgent)
+      .expect(200)
     assert.ok(res.headers['set-cookie'][0].includes('path=/; httponly'))
   })
 })

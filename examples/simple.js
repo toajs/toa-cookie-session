@@ -10,7 +10,7 @@ app.keys = ['test key']
 app.use(toaCookieSession())
 app.use(function () {
   console.log(this.session)
-  if (!this.session.id) this.session = {id: 'toa'}
+  if (!this.session.id) this.session = { id: 'toa' }
   this.body = this.session
 })
 

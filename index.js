@@ -44,7 +44,7 @@ function toaCookieSession (options) {
         if (val == null) session = null
         else if (typeof val === 'object') {
           session = this.session
-          let ctx = session ? session._ctx : new SessionContext(true)
+          const ctx = session ? session._ctx : new SessionContext(true)
           session = new Session(ctx, val)
         } else throw new Error('session can only be set as null or an object.')
       }
@@ -52,7 +52,7 @@ function toaCookieSession (options) {
 
     function saveCookie () {
       if (!setCookie || session === false) return
-      let sessionString = session === null ? '' : session.serialize()
+      const sessionString = session === null ? '' : session.serialize()
       if (sessionString === '' || (sessionString && session._ctx.val !== sessionString)) {
         this.cookies.set(sessionKey, sessionString, this.sessionOptions)
       }
@@ -69,20 +69,20 @@ function SessionContext (isNew, val) {
 }
 
 function Session (ctx, obj) {
-  Object.defineProperty(this, '_ctx', {value: ctx})
+  Object.defineProperty(this, '_ctx', { value: ctx })
   if (obj) {
-    for (let key of Object.keys(obj).sort()) {
+    for (const key of Object.keys(obj).sort()) {
       this[key] = obj[key]
     }
   }
 }
 
 Session.prototype.serialize = function () {
-  let keys = Object.keys(this).sort()
+  const keys = Object.keys(this).sort()
   if (!keys.length) return
 
-  let obj = {}
-  for (let key of keys) {
+  const obj = {}
+  for (const key of keys) {
     obj[key] = this[key]
   }
   return encode(obj)
