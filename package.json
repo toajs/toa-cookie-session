@@ -4,7 +4,7 @@
   "authors": [
     "Yan Qing <admin@zensh.com>"
   ],
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -21,9 +21,10 @@
     "cookie",
     "session"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "should-send-same-site-none": "^2.0.4"
+  },
   "devDependencies": {
-    "should-send-same-site-none": "^2.0.4",
     "standard": "^14.3.3",
     "supertest": "^4.0.2",
     "tman": "^1.10.0",
