@@ -18,15 +18,15 @@ function toaCookieSession (options) {
 
   return function cookieSession () {
     let session = false
+    this.sessionOptions = Object.create(options)
+
     if (options.sameSite && typeof options.sameSite === 'string' && options.sameSite.toLowerCase() === 'none') {
       const userAgent = this.get('user-agent')
       // Non-secure context or Incompatible clients, don't send SameSite=None property
       if (!options.secure || (userAgent && !isSameSiteNoneCompatible(userAgent))) {
-        options.sameSite = false
+        this.sessionOptions.sameSite = false
       }
     }
-
-    this.sessionOptions = Object.create(options)
 
     Object.defineProperty(this, 'session', {
       enumerable: true,
